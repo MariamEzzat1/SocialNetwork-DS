@@ -86,7 +86,7 @@ while (q.size()>1){
     }
 ShowCode(root,"");
 String x=encoding(text); 
-write_file(x);
+//write_file(x);
 return ("Encoded statement: "+"\n"+encoding(text)+"\n"+traverse(x,root ));
 } 
  public static String printFileSize(String fileName) {

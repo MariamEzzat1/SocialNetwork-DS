@@ -3,7 +3,6 @@ public class HuffmanTree {
      public static void  ShowCode (HuffmanNode x,String code){//recursive function to print code 
         arr_code[x.getchar()]=code;
       if (x.l== null&& x.r== null){
-           System.out.println(x.getchar()+ ":" + code);
             return; // base case
        }
        ShowCode (x.l,code+"0"); // left tarversal has value of 0

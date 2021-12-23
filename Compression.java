@@ -37,22 +37,7 @@ public class Compression {
         }
  
     }
-     public static void printFileSize(String fileName) {
-
-        Path path = Paths.get(fileName);
-
-        try {
-
-            // size of a file (in bytes)
-            long bytes = Files.size(path);
-            System.out.println(String.format("%,d bytes", bytes));
-            System.out.println(String.format("%,d kilobytes", bytes / 1024));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
+      
     public static string compression (String text){
 int index=0; int numOffreq=0;
 int [] ASCII=new int[128];
@@ -104,3 +89,18 @@ String x=encoding(text);
 write_file(x);
 return ("Encoded statement: "+"\n"+encoding(text)+"\n"+traverse(x,root ));
 } 
+ public static String printFileSize(String fileName) {
+       String x = null,y = null;
+
+        Path path = Paths.get(fileName);
+
+        try {
+            long bytes = Files.size(path);
+             x=String.format("%,d bytes", bytes);
+           y=String.format("%,d kilobytes", bytes / 1024);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return (x+"\n"+y);
+    }

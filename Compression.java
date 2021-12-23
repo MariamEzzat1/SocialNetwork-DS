@@ -17,7 +17,43 @@ public class Compression {
     /**
      * @param args the command line arguments
      */
-    public static void compression (String text){
+    public static void write_file(String s){
+     try {
+            File myObj = new File("compressed.txt");
+            if (myObj.createNewFile()) {
+        System.out.println("File created: " + myObj.getName());
+      } else {
+        System.out.println("File already exists.");
+      }
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();}
+     try{
+            FileWriter writer = new FileWriter("compressed.txt", true);
+            writer.write(s);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+ 
+    }
+     public static void printFileSize(String fileName) {
+
+        Path path = Paths.get(fileName);
+
+        try {
+
+            // size of a file (in bytes)
+            long bytes = Files.size(path);
+            System.out.println(String.format("%,d bytes", bytes));
+            System.out.println(String.format("%,d kilobytes", bytes / 1024));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public static string compression (String text){
 int index=0; int numOffreq=0;
 int [] ASCII=new int[128];
 
@@ -63,10 +99,8 @@ while (q.size()>1){
    root=S;
    q.add(S);
     }
-System.out.println("Each character and its corresponding huffmancode is listed below: ");
 ShowCode(root,"");
 String x=encoding(text); 
-System.out.println("Encoded statement: "+x);
-String decoded =traverse(x,root);
-System.out.println(decoded);
+write_file(x);
+return ("Encoded statement: "+"\n"+encoding(text)+"\n"+traverse(x,root ));
 } 

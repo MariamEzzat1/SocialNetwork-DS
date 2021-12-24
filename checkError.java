@@ -44,7 +44,7 @@
                     str = lines[i].substring(startOpenning+1,endOpening);
                     stk.push(str);
                     stk_openclose.push(indent_opening);
-                    counter++;
+                    
               
                  }
                 
@@ -54,25 +54,28 @@
                 str = lines[i].substring(startOpenning+1,lines[i].indexOf(" "));
                 stk.push(str);
                 stk_openclose.push(indent_opening);
-                counter++;
+                
                 }
             }
     
             //  closing
             int startClosing= lines[i].indexOf("/");
             int endClosing=lines[i].length()-1;
-           if(str2.compareTo(stk.peek()) !=0)
+            
+            if(!Fixerror.get(i-1).startsWith("<", 0) && !lines[i].contains("/")){
+               
+                    if(str2.compareTo(stk.peek()) !=0)
                         
                     {
                         
               System.out.println("Error in consistency");
                        stk.pop();
-                            
-                         Fixerror.set(i, "</"+stk.peek()+">");
-                          Fixerror.set(i-2,lines[i]+ Fixerror.set(i-1,"</"+stk.peek()+">"));
-                      
+                             
+                         Fixerror.set(i-1, lines[i-1].concat("</"+stk.peek()+">"));
+                          //Fixerror.set(i-1, Fixerror.set(i-1,"</"+stk.peek()+">"));
+                       //System.out.println(Fixerror.set(i,"\n</"+stk.peek()+">"));
                        
-                       System.out.println(Fixerror.set(i, lines[i]));
+//                       System.out.println(Fixerror.set(i, lines[i-1]));
                       
                      if(str.compareTo(stk.peek())!=0&&indent_opening.compareTo( stk_openclose.peek())==0){
 
@@ -89,7 +92,7 @@
             if( startClosing != -1 )
                 {
                     str2 = lines[i].substring(startClosing+1,endClosing);
-                   counter--;
+                   
               //no error
                     if (str2.compareTo(stk.peek()) == 0 )
                     {
@@ -119,12 +122,7 @@
                 }
               
              
-            // System.out.println(Fixerror[i]);
-             if(!stk2.empty()){
-                
-                       
-              //  System.out.println(  "Error in consistency");
-            }
+           
          
             if (stk.empty())
             {

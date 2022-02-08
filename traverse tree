@@ -1,0 +1,73 @@
+ //traverse tree and setting the tag name, value and attribute of the nodes 
+    public Node Insert(String []arr){
+          Node curr = new Node () ;
+          int d = 0;
+         String text = "";
+       
+         for(int i=0;i<arr.length;i++){
+        
+             arr[i]=arr[i].trim();
+             
+         int startOpenning = arr[i].indexOf("<");
+         int endStarting = arr[i].indexOf(">"); 
+         int startClosing = arr[i].indexOf("/");
+         int endClosing = arr[i].length()-1;
+         String str1 = arr[i].substring(0,arr[i].length());
+         String str2,s,s2= null;
+               
+ boolean x = str1.contains(" ");
+
+// openning tag
+
+  if( arr[i].contains("<")  && (arr[i].charAt(startOpenning+1) != '/')  ){
+                 Node child1 = new Node ();
+               
+                 if (i==0)
+                         {
+                         curr = child1;
+                         curr.parent=null;
+                         curr.setDepth(d);
+                         root = curr;
+                         }
+                 else
+                 {
+                 d ++ ;
+                  curr = child1;
+                  curr.addChild(child1);
+                  curr.setClosingTag(false);
+                  curr.setDepth(d);
+                 
+                  root.children.add(curr);
+                 }
+               
+                  if(x)
+                  {
+                      str1 = str1.substring(1,str1.indexOf(' '));
+                      curr.setTagName(str1);
+                      curr.setTagAttributes(arr[i].substring(arr[i].indexOf(' ')+1,arr[i].length()-1)  );
+                
+                  }
+                 
+                  else {
+                      curr.setTagName(str1.substring(1, arr[i].length()-1));
+                   
+
+                  }
+  }
+             
+             // tag value  
+           else if (! arr[i].contains("<")&& arr[i].trim().length()!= 0 ) {
+                 curr.setTagValue(arr[i]);
+             }
+            //closing tag 
+             if ( startClosing != -1 )
+             {
+                 str2 = arr[i].substring(2,arr[i].length());
+                 d--;
+                 curr.setClosingTag(true) ;
+                 curr = curr.parent ;
+             }
+          }
+           return root;
+        }
+    

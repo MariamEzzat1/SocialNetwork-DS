@@ -44,12 +44,19 @@ String[] arr = read(filename);
        
       String [] array = readArray(filename);
 String text=minifying(array);
-//System.out.println ("size of compressed file: ");
-//printFileSize("compressed.txt");
- String compress=compression (text);
-  String formatted = getPrettyXml(compress);
+
+ String compressed=compression (text);
+  String formatted = getPrettyXml(compressed);
+  //
+  
+
+System.out.println("Encoded Statement: "+formatted);
+System.out.println (trav);
+System.out.println("Size before: "+arrSize(array)+" bytes");
+int size_af=Size(compression(text));
+System.out.println("Size after: "+ size_af+" bytes");
  
-        jTextArea2.setText(formatted+"\n"+"size of compressed file: "+printFileSize("compressed.txt")); 
+        jTextArea2.setText("Encoded Statement: "+formatted+"\n"+trav+"\n"+"Size before: "+arrSize(array)+" bytes"+"\n"+"Size after: "+ size_af+" bytes"); 
      
     }                                        
 
@@ -59,6 +66,93 @@ String text=minifying(array);
     jTextArea2.setText(format);
 
         // TODO add your handling code here:
+    }                                        
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+String text = readString(filename);
+String format = getPrettyXml(text);
+String [] array = format.split("\n");
+
+JSONtree tree = new JSONtree();
+
+String json = tree.ConvertTOJSON(array);
+
+   jTextArea2.setText(json);
+   
+    }                                        
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+         String xml = readString(filename);
+    String format = getPrettyXml(xml);
+    String [] array =format.split("\n");
+    String error=CheckError(array);
+   jTextArea2.setText(error);
+    }                                        
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+        DefaultDirectedGraph<String, DefaultEdge> g = new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+      DocumentBuilderFactory factory =  DocumentBuilderFactory.newInstance();
+      try{
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      Document document = builder.parse(new File(filename));
+      document.getDocumentElement().normalize();
+      NodeList userlist=document.getElementsByTagName("user");
+      for(int i=0;i<userlist.getLength();i++){
+      Node user=userlist.item(i);
+       Element userElement=(Element)user;
+      String id= userElement.getElementsByTagName("id").item(0).getTextContent();
+      //vertix
+      if(!g.containsVertex(id)){g.addVertex(id);}
+       if(user.getNodeType()==Node.ELEMENT_NODE)
+      {
+         String []arr= userElement.getElementsByTagName("followers").item(0).getTextContent().split("\n");
+         for(int k=0;k<arr.length;k++){
+         if(arr[k].trim().length()==0)
+             continue;
+         else
+             System.out.println(arr[k].trim());
+         if(!g.containsVertex(arr[k].trim())) 
+         {if(!g.containsEdge(id, arr[k].trim()))
+                g.addVertex(arr[k].trim());}
+                                                  
+               g.addEdge(id, arr[k].trim());
+         
+         jTextArea2.setText("check the created graph in your pc");
+
+      }
+      
+      
+      }
+       File imgFile = new File("C:\\Users\\Maria\\Downloads\\graph.png");
+    imgFile.createNewFile();
+
+    JGraphXAdapter<String, DefaultEdge> graphAdapter = 
+            
+      new JGraphXAdapter<String, DefaultEdge>(g);
+    mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
+    layout.execute(graphAdapter.getDefaultParent());
+    
+    BufferedImage image = 
+      mxCellRenderer.createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
+ 
+    ImageIO.write(image, "PNG", imgFile);
+
+    assertTrue(imgFile.exists());
+     
+    Desktop dt = Desktop.getDesktop();
+    dt.open(imgFile);
+    
+      }
+      
+      }
+      
+      catch(ParserConfigurationException | SAXException | IOException e){}
+
+    
+        
     }                                        
 
     /**
@@ -94,3 +188,21 @@ String text=minifying(array);
             public void run() {
                 new editorxml().setVisible(true);
             }
+        });
+    }
+
+    // Variables declaration - do not modify                     
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
+    // End of variables declaration                   

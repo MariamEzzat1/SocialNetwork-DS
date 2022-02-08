@@ -56,3 +56,27 @@ import org.xml.sax.SAXException;
       
       
       }
+      File imgFile = new File("C:\\Users\\Maria\\Downloads\\graph.png");
+    imgFile.createNewFile();
+
+    JGraphXAdapter<String, DefaultEdge> graphAdapter = 
+            
+      new JGraphXAdapter<String, DefaultEdge>(g);
+    mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
+    layout.execute(graphAdapter.getDefaultParent());
+    
+    BufferedImage image = mxCellRenderer.createBufferedImage(graphAdapter, null, 2, Color.WHITE, true, null);
+ 
+    ImageIO.write(image, "PNG", imgFile);
+    assertTrue(imgFile.exists());
+     Desktop dt = Desktop.getDesktop();
+    dt.open(imgFile);
+      }
+      
+      }
+      
+      catch(ParserConfigurationException | SAXException | IOException e){}
+
+    } 
+}
+}

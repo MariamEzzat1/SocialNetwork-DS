@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import static project.Formattig.getPrettyXml;
 import static project.Reading.readString;
-
+import project.Node;
 public class JSONtree {
     
   private Node root;

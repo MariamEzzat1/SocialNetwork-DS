@@ -1,0 +1,25 @@
+   // method to get the children of each node and put it in an arraylist
+    public ArrayList <Node> get_children (Node node) throws NullPointerException
+    {
+    ArrayList <Node> temp = new ArrayList <>() ;
+    int n =  root.children.indexOf(node) ;
+    int d = root.children.get(n).getDepth();
+         for (int j = n + 1 ; j<root.children.size();j++)
+         {
+             if((d != root.children.get(j).getDepth())&& root.children.get(j).getDepth() == d+1)
+             {         
+              temp.add(root.children.get(j));
+             }
+             else 
+             {
+               if(root.children.get(j).getDepth()== d)
+               {   
+                   break;
+    
+               }
+               else{
+                    continue;}
+             }
+         }
+         return temp;
+    }

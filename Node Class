@@ -1,0 +1,96 @@
+    // node class 
+ public class Node{
+ 
+       private String tagName;
+       private String tagValue;
+       private String tagAttributes;
+       private boolean closingTag;
+       private int depth;
+       private ArrayList<Node> children= new ArrayList<Node>();
+       private Node parent ;
+       public Node() {
+           tagName = null;
+           tagValue = null;
+           tagAttributes = null;
+           closingTag = false;
+           depth = 0;
+           parent=null;
+           
+        }
+
+        public Node(String name,String Attribute,String value,boolean close,int depth, Node parent ) {
+            this.children = new ArrayList<>();
+            this.tagName = name;
+            this.tagAttributes=Attribute;
+            this.tagValue=value;
+            this.closingTag=close;
+            this.depth=depth;
+            this.parent=parent;
+        }
+
+        public String getTagName() {
+            return tagName;
+        }
+
+        public void setTagName(String tagName) {
+            this.tagName = tagName;
+        }
+
+        public String getTagValue() {
+            return tagValue;
+        }
+
+        public void setTagValue(String tagValue) {
+            this.tagValue = tagValue;
+        }
+
+        public String getTagAttributes() {
+            return tagAttributes;
+        }
+
+        public void setTagAttributes(String tagAttributes) {
+            this.tagAttributes = tagAttributes;
+        }
+
+        public boolean isClosingTag() {
+            return closingTag;
+        }
+
+        public void setClosingTag(boolean closingTag) {
+            this.closingTag = closingTag;
+        }
+
+        public int getDepth() {
+            return depth;
+        }
+
+        public void setDepth(int depth) {
+            this.depth = depth;
+        }
+        
+         public Node addChild(Node child) {
+             child.setParent(this);
+             this.children.add(child);
+             return child;
+         }
+ 
+     public ArrayList<Node> getChildren() {
+     return children ;
+     }
+
+ 
+private void setParent(Node parent) {
+this.parent = parent;
+}
+ 
+public Node getParent() {
+return parent;
+}
+ 
+public Node getRoot( ) {
+        if( parent == null){
+             return this;
+         }
+        return parent.getRoot();
+       }
+}

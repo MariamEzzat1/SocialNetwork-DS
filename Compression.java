@@ -12,33 +12,11 @@ import java.util.List;
  *
  * @author Mariem
  */
-public class Compression {
+public class Compression_final {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void write_file(String s){
-     try {
-            File myObj = new File("compressed.txt");
-            if (myObj.createNewFile()) {
-        System.out.println("File created: " + myObj.getName());
-      } else {
-        System.out.println("File already exists.");
-      }
-    } catch (IOException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();}
-     try{
-            FileWriter writer = new FileWriter("compressed.txt", true);
-            writer.write(s);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
- 
-    }
-      
-    public static string compression (String text){
+static String trav=null;
+    
+    public static String compression (String text){
 int index=0; int numOffreq=0;
 int [] ASCII=new int[128];
 
@@ -84,23 +62,43 @@ while (q.size()>1){
    root=S;
    q.add(S);
     }
+//System.out.println("Each character and its corresponding huffmancode is listed below: ");
 ShowCode(root,"");
 String x=encoding(text); 
-//write_file(x);
-return ("Encoded statement: "+"\n"+encoding(text)+"\n"+traverse(x,root ));
+
+
+//System.out.println(traverse(x,root));
+
+
+ trav=traverse(x,root);
+return (encoding(text));
 } 
- public static String printFileSize(String fileName) {
-       String x = null,y = null;
+    public static void main(String[] args) {
+         //TODO code application logic here
+String [] array = readArray("C:\\Users\\El.Takwa\\Downloads\\sample.xml");
+String text=minifying(array);
+String compressed=compression (text);
+System.out.println("Encoded Statement: "+compressed);
+System.out.println (trav);
+System.out.println("Size before: "+arrSize(array)+" bytes");
+int size_af=Size(compression(text));
+System.out.println("Size after: "+ size_af+" bytes");
 
-        Path path = Paths.get(fileName);
-
-        try {
-            long bytes = Files.size(path);
-             x=String.format("%,d bytes", bytes);
-           y=String.format("%,d kilobytes", bytes / 1024);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return (x+"\n"+y);
+}
+//function to calculate size of string in bytes "after compression"
+static int  Size(String x)
+       {
+           return (x.length()/8);
+       }
+ //function to calculate size of array of strings in bytes "before compression"
+static int arrSize(String[] x ){
+int size=0;
+for (int i=0;i<x.length;i++)
+    for (int j=0;j<x[i].length();j++)
+    {
+        size+=1; // every char is 1 byte in size
     }
+return size;
+}
+    }
+  

@@ -1,119 +1,18 @@
 package project;
 
 import java.util.ArrayList;
+import java.io.IOException;
+import java.util.ArrayList;
 import static project.Formattig.getPrettyXml;
-import static project.Reading.readArray;
 import static project.Reading.readString;
 
 public class JSONtree {
-    // node class 
- public class Node{
- 
-       private String tagName;
-       private String tagValue;
-       private String tagAttributes;
-       private boolean closingTag;
-       private int depth;
-       private ArrayList<Node> children= new ArrayList<Node>();
-       private Node parent ;
-       public Node() {
-           tagName = null;
-           tagValue = null;
-           tagAttributes = null;
-           closingTag = false;
-           depth = 0;
-           parent=null;
-           
-        }
-
-        public Node(String name,String Attribute,String value,boolean close,int depth, Node parent ) {
-            this.children = new ArrayList<>();
-            this.tagName = name;
-            this.tagAttributes=Attribute;
-            this.tagValue=value;
-            this.closingTag=close;
-            this.depth=depth;
-            this.parent=parent;
-        }
-
-        public String getTagName() {
-            return tagName;
-        }
-
-        public void setTagName(String tagName) {
-            this.tagName = tagName;
-        }
-
-        public String getTagValue() {
-            return tagValue;
-        }
-
-        public void setTagValue(String tagValue) {
-            this.tagValue = tagValue;
-        }
-
-        public String getTagAttributes() {
-            return tagAttributes;
-        }
-
-        public void setTagAttributes(String tagAttributes) {
-            this.tagAttributes = tagAttributes;
-        }
-
-        public boolean isClosingTag() {
-            return closingTag;
-        }
-
-        public void setClosingTag(boolean closingTag) {
-            this.closingTag = closingTag;
-        }
-
-        public int getDepth() {
-            return depth;
-        }
-
-        public void setDepth(int depth) {
-            this.depth = depth;
-        }
-        
-         public Node addChild(Node child) {
-             child.setParent(this);
-             this.children.add(child);
-             return child;
-         }
- 
-      public void addChildren(ArrayList<Node> children) {
-        children.forEach(each -> each.setParent(this));
-        this.children.addAll(children);
-         }
- 
- 
-     public ArrayList<Node> getChildren() {
-     return children ;
-     }
-
- 
-private void setParent(Node parent) {
-this.parent = parent;
-}
- 
-public Node getParent() {
-return parent;
-}
- 
-public Node getRoot( ) {
-        if( parent == null){
-             return this;
-         }
-        return parent.getRoot();
-       }
-}
     
   private Node root;
 
     public JSONtree() 
     {
-        root = null;
+        
     }
     
     // print tree with tagnames and depths  
@@ -126,24 +25,29 @@ public Node getRoot( ) {
            System.out.println(root.children.get(i).getTagName());
     }
     }
-    // method to get the children of each node and put it in an arraylist
-    public ArrayList <Node> get_children (Node node)
+      // method to get the children of each node and put it in an arraylist
+    public ArrayList <Node> get_children (Node node) throws NullPointerException
     {
     ArrayList <Node> temp = new ArrayList <>() ;
     int n =  root.children.indexOf(node) ;
     int d = root.children.get(n).getDepth();
-         for (int j = n + 1; j<root.children.size()-1;j++)
+         for (int j = n + 1 ; j<root.children.size();j++)
          {
-             if((root.children.get(n).getDepth()!= root.children.get(j).getDepth()))
+             if((d != root.children.get(j).getDepth())&& root.children.get(j).getDepth() == d+1)
              {         
               temp.add(root.children.get(j));
              }
              else 
              {
-             return temp;
+               if(root.children.get(j).getDepth()== d)
+               {   
+                   break;
+    
+               }
+               else{
+                    continue;}
              }
          }
-         //if(root.children.get(n+1).getDepth()== d+1)
          return temp;
     }
     
@@ -208,7 +112,6 @@ public Node getRoot( ) {
            else if (! arr[i].contains("<")&& arr[i].trim().length()!= 0 ) {
                  curr.setTagValue(arr[i]);
              }
-
             //closing tag 
              if ( startClosing != -1 )
              {
@@ -217,70 +120,119 @@ public Node getRoot( ) {
                  curr.setClosingTag(true) ;
                  curr = curr.parent ;
              }
-
           }
            return root;
         }
     
+        private static String repeatString(int stack)
+       {
+     StringBuilder indent = new StringBuilder();
+     for (int i = 0; i < stack; i++) {
+        indent.append("    ");
+     }
+     return indent.toString();
+       }   
+    
 // Converting the Xml file to JSON    
-public String ConvertTOJSON (String []arr){
-    ArrayList <Node> tmp,tmp2 = new ArrayList<>();
+public String ConvertTOJSON (String [] arr){
+    
+    ArrayList <Node> tmp = new ArrayList<>();
+    ArrayList <Node> tmp2,tmp3,tmp4 = new ArrayList<>();
     Node root = Insert(arr);
-    boolean flag = false;
-    int counter = 0;
-    String text = "{\n"+"\"" + root.getTagName()+":\"{\n";
-
-    for (int i = 0 ;i< arr.length;i++) 
-    {  
-        flag = false;
-        counter = 0;
-        for (int j = i+1; j< root.children.size();j++)
-        {
-             String name = root.children.get(i).getTagName();
-
-             if(((root.children.get(j).getTagName()).equals(name)) && (root.children.get(i).getDepth() == root.children.get(j).getDepth()))
-             {
-             flag = true;
-             counter ++;
-             
-                 if(j == i+1)
-                 {
-                  text += "\"" + root.children.get(i).getTagValue()+"\",\n"+"\""+ root.children.get(j).getTagValue()+"\"";
-             
-                 }
-                 else 
-                 {
-                 text += ",\n" +"\"" + root.children.get(j).getTagValue()+"\"";
-                
-                 }   
-                  text += "\n},\n";
-                 
-                 text += "}\n";
-             }
-             
-             }
-
-         if (flag == false)
-         {
-         text += "\"" + root.children.get(i).getTagName()+ "\":";
-         tmp = get_children(root.children.get(i));
-         //System.out.println("sandra");
-
-              if(tmp.size() == 0)
+ 
+    String text = "{\n" +repeatString(1)+ "\"" + root.getTagName()+ ":\"{\n";
+            tmp = get_children(root.children.get(0));
+          
+            text+= repeatString(2) +"\""+root.children.get(0).getTagName()+"\":[\n";
+              for (int k = 0; k<tmp.size();k++)
               {
-              text += "\"" + root.children.get(i).getTagValue()+"\",\n";
-             //  System.out.println("mama");
-              }         
-             else 
-              {
-              text += "{\n";
-              }                        
-         } 
-               if(flag == true) 
-        { 
-            i += counter ;
-           break;       }       
-    }
-     text += "}";
-    return text;
-   }
+                tmp2 = get_children(tmp.get(k));
+                if(tmp2.isEmpty())
+                {
+                text+=repeatString(3)+"\""+tmp.get(k).getTagName()+"\":"+"\""+tmp.get(k).getTagValue()+"\",\n";   
+                }
+                else
+                {    
+                    text+=repeatString(3)+"\""+tmp.get(k).getTagName()+"\":[\n";
+                    
+                    for(int f=0;f<tmp2.size();f++)
+                    {
+                        tmp3 = get_children(tmp2.get(f));
+                    if(tmp2.size()>1 && tmp2.get(0).getTagName().equals(tmp2.get(1).getTagName()))
+                    {
+                      for(int m=0;m<tmp3.size();m++)
+                    {  
+                    tmp4 = get_children(tmp3.get(m));
+                    if(tmp4.isEmpty())
+                    {
+                        text+=repeatString(4)+"{\n";
+                    text+=repeatString(5)+"\""+tmp3.get(m).getTagName()+"\":"+"\""+tmp3.get(m).getTagValue()+"\""; 
+                    if(tmp3.size()==1){
+                         if(f<tmp2.size()-1)
+                        {text+="\n"+repeatString(4)+"},\n";}
+                        else{text+="\n"+repeatString(4)+"}\n";}
+                        
+                    }
+                    else{text+=",\n";}
+                    
+                    }
+                    else
+                    {
+                      text+=repeatString(5)+"\""+tmp3.get(m).getTagName()+"\":";  
+                        for(int n = 0;n<tmp4.size();n++){
+                         if(tmp4.size()>1 && tmp4.get(n).getTagName().equals(tmp4.get(n+1).getTagName())){
+                         text+="[\n"+repeatString(6)+"\""+tmp4.get(n).getTagValue()+"\",\n"+repeatString(6)+"\""+tmp4.get(n+1).getTagValue()+"\"\n"+repeatString(5)+"]\n";
+                          break;
+                         }
+                         else 
+                         {
+                          text+="{\n"+repeatString(6)+"\""+tmp4.get(0).getTagName()+"\":"+"\""+tmp4.get(0).getTagValue()+"\"\n";
+                          text+=repeatString(5)+"}\n";
+                         }
+                        
+                        }
+                        if(f<tmp2.size()-1)
+                        {text+=repeatString(4)+"},\n";}
+                        else{text+=repeatString(4)+"}\n";}
+                   
+                    }
+                    
+                    } 
+                   
+                    }
+               
+                    else
+                    {
+                    text+=repeatString(4)+"\""+tmp2.get(f).getTagName()+"\":{\n";
+                    for(int m=0;m<tmp3.size();m++)
+                    {
+                    tmp4 = get_children(tmp3.get(m));
+                    if(tmp4.isEmpty())
+                    {
+                    text+=repeatString(5)+"\""+tmp3.get(m).getTagName()+"\":"+"\""+tmp3.get(m).getTagValue()+"\",\n";   
+                    
+                    }
+                    else
+                    {
+                      text+=repeatString(5)+"\""+tmp3.get(m).getTagName()+"\":[\n";  
+                        for(int n = 0;n<tmp4.size();n++){
+                       if(tmp4.size()>1 && tmp4.get(n).getTagName().equals(tmp4.get(n+1).getTagName())){
+                         text+=repeatString(6)+"\""+tmp4.get(n).getTagValue()+"\",\n"+repeatString(6)+"\""+tmp4.get(n+1).getTagValue()+"\"\n"+repeatString(5)+"]\n";
+                         text+=repeatString(4)+"}\n";
+                         }
+                         break;
+                        }
+                   
+                    }
+                    }
+                    
+                    }
+                    }
+                  text+=repeatString(3)+"]\n";  
+                }
+           
+              }
+              text+=repeatString(2)+"]\n";
+              text+=repeatString(1)+"}\n}";
+             return text;
+        }

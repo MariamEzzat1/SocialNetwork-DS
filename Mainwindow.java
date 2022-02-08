@@ -24,11 +24,13 @@ String out = minifying (array);
 System.out.println(out);
 
 //convertToJSON
-JSONtree h = new JSONtree ();
-JSONtree.Node root =  h.Insert(array);
-h.print(root);
-String json = h.ConvertTOJSON(array);
+String format = getPrettyXml(text);
+String [] array = format.split("\n");
+JSONtree tree = new JSONtree();
+String json = tree.ConvertTOJSON(array);
 System.out.println(json);
+
+}
 
 //compression
 String out1 = minifying (array);

@@ -16,7 +16,7 @@ String consistency = Consistency.CheckConsistent(arr);
 //check error
 String format1 = getPrettyXml(text);
 String [] array1 = format.split("\n");
-String error = CheckError.CheckError(array1);
+String error = checkError.CheckError(array1);
 System.out.println(error);
 
 //minifying  
